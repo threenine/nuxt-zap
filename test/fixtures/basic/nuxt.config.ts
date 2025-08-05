@@ -4,4 +4,7 @@ export default defineNuxtConfig({
   modules: [
     MyModule,
   ],
+  nuxtZap: {
+    zapAddress: 'test@test.com',
+  },
 })
