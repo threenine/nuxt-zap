@@ -22,10 +22,9 @@ My new Nuxt module for doing amazing things.
 
 ## Features
 
-<!-- Highlight some of the features your module provide here -->
-- ⛰ &nbsp;Foo
-- 🚠 &nbsp;Bar
-- 🌲 &nbsp;Baz
+- Send a zap (Lightning payment) to a Lightning Address using @getalby/sdk (WebLN)\
+  Falls back to window.webln if the SDK provider is not available.
+- Simple Zap component with amount and comment input.
 
 ## Quick Setup
 
@@ -36,6 +35,38 @@ npx nuxi module add @threenine/nuxt-zap
 ```
 
 That's it! You can now use My Module in your Nuxt app ✨
+
+### Configuration
+
+Add to your nuxt.config:
+
+```ts
+export default defineNuxtConfig({
+  modules: ['@threenine/nuxt-zap'],
+  nuxtZap: {
+    zapAddress: 'yourname@getalby.com',
+    defaultAmount: 21,
+    messageTemplate: 'Zap from Nuxt',
+  },
+})
+```
+
+### Usage
+
+- Component:
+```vue
+<template>
+  <Zap title="Zap me" />
+</template>
+```
+
+- Programmatic:
+```ts
+const { $zap } = useNuxtApp()
+await $zap.send(100, 'Thanks!')
+```
+
+A WebLN provider is required (e.g. Alby browser extension). The SDK will be used when available.
 
 
 ## Contribution
