@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 
 // SFC under test
-import Zap from '../src/runtime/components/Zap.vue'
+import ZapButton from '../src/runtime/components/ZapButton.vue'
 
 // Helper to mock Nuxt's useNuxtApp to inject $zap
 const sendMock = vi.fn()
@@ -17,7 +17,7 @@ vi.mock('#app', () => {
 })
 
 function mountZap(overrides: Partial<Parameters<typeof mount>[1]> = {}) {
-  return mount(Zap, {
+  return mount(ZapButton, {
     global: {
       // Stub nuxt/ui components and Icon to avoid bringing in their implementations
       stubs: {
@@ -55,8 +55,19 @@ function mountZap(overrides: Partial<Parameters<typeof mount>[1]> = {}) {
     ...overrides,
   })
 }
+// Type-safe deferred promise helper for tests
 
-describe('Zap.vue', () => {
+function createDeferred<T>() {
+  let resolve!: (value: T | PromiseLike<T>) => void
+  let reject!: (reason?: unknown) => void
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res
+    reject = rej
+  })
+  return { promise, resolve, reject }
+}
+
+describe('ZapButton.vue', () => {
   beforeEach(() => {
     sendMock.mockReset()
   })
@@ -83,7 +94,7 @@ describe('Zap.vue', () => {
     await amountInput?.find('input').setValue('21')
     await commentInput?.find('input').setValue('Thanks!')
 
-    // Click Send Zap
+    // Click Send ZapButton
     const sendBtn = wrapper.findAllComponents({ name: 'UButton' }).find(b => b.text().includes('Send Zap'))!
     await sendBtn.trigger('click')
 
@@ -123,10 +134,9 @@ describe('Zap.vue', () => {
 
   it('disables buttons while sending', async () => {
     // Make send hang until we resolve
-    let resolveSend: (v?: any) => void
-    const p = new Promise((res) => { resolveSend = res })
-    // @ts-expect-error - assigned in closure
-    sendMock.mockReturnValue(p)
+    const deferred = createDeferred<{ preimage: string }>()
+
+    sendMock.mockReturnValue(deferred.promise)
 
     const wrapper = mountZap()
     const pop = wrapper.findComponent({ name: 'UPopover' })

@@ -13,19 +13,41 @@ export interface ZapResult {
   paymentHash?: string
   invoice?: string
 }
-export interface ZapException {
-  message: string
+class ZapException extends Error {
+  additionalInfo: string
+
+  // Step 3: Override the constructor
+  constructor(message: string, additionalInfo: string) {
+    // Call the base class constructor with the provided message
+    super(message)
+
+    // Set the name property to the class name
+    this.name = this.constructor.name
+
+    // Set the custom properties
+    this.additionalInfo = additionalInfo
+
+    // Ensure the stack trace is correct
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor)
+    }
+  }
+
+  // Optionally, you can add custom methods
+  getErrorDetails(): string {
+    return `Additional Info: ${this.additionalInfo}`
+  }
 }
 // Resolve a lightning address into LNURLp metadata
 async function resolveLightningAddress(address: string) {
   const [name, host] = address.split('@')
   if (!name || !host) {
-    throw new ZapException('Invalid lightning address')
+    throw new ZapException('Invalid lightning address', `Lightning address being set ${address}. `)
   }
   const wellKnownUrl = `https://${host}/.well-known/lnurlp/${encodeURIComponent(name)}`
   const res = await fetch(wellKnownUrl)
   if (!res.ok) {
-    throw new ZapException(`Failed to resolve lightning address: ${res.status}`)
+    throw new ZapException(`Failed to resolve lightning address`, `status: ${res.status} ${res.statusText}`)
   }
   const data = await res.json()
   return data as {
@@ -48,11 +70,11 @@ async function requestInvoice(callbackUrl: string, amountMsat: number, comment?:
   }
   const res = await fetch(url.toString())
   if (!res.ok) {
-    throw new ZapException(`Failed to request invoice: ${res.status}`)
+    throw new ZapException(`Failed to request invoice: ${res.status}`, `test`)
   }
   const data = await res.json()
   if (data.status === 'ERROR') {
-    throw new ZapException(data.reason || 'LNURL error')
+    throw new ZapException('LNURL error', `status: ${data.status} ${data.reason}`)
   }
   return data as { pr: string, routes: string[] }
 }
@@ -96,17 +118,25 @@ async function ensureEnabled(webln: WebLNLike): Promise<WebLNLike> {
   }
   return webln
 }
+async function getWindowWebLN(): Promise<WebLNLike | undefined> {
+  if (typeof window !== 'undefined' && 'webln' in window) {
+    const webln = (window as unknown).webln as WebLNLike
+    return ensureEnabled(webln)
+  }
+  return undefined
+}
 
 // Get a WebLN provider (try @getalby/sdk first, then fallback to window.webln)
+
 export async function getWebLN(): Promise<WebLNLike> {
   const albyProvider = await getAlbyProvider()
   if (albyProvider) {
     return albyProvider
   }
 
-  if (typeof window !== 'undefined' && (window as any).webln) {
-    const webln = (window as any).webln as WebLNLike
-    return await ensureEnabled(webln)
+  const windowWebLN = await getWindowWebLN()
+  if (windowWebLN) {
+    return windowWebLN
   }
 
   throw new ZapException('No WebLN provider available. Install Alby or enable WebLN.')

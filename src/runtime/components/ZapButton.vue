@@ -21,7 +21,7 @@ async function onSend() {
     result.value = `Paid invoice. Preimage: ${res?.preimage || 'n/a'}`
     open.value = false
   }
-  catch (e: unknown) {
+  catch (e: ZapException) {
     error.value = e?.message || String(e)
   }
   finally {
