@@ -152,9 +152,7 @@ describe('ZapButton.vue', () => {
     expect((mainBtn?.element as HTMLButtonElement).disabled).toBe(true)
     expect((sendBtn.element as HTMLButtonElement).disabled).toBe(true)
 
-    // Resolve
-    // @ts-expect-error - set above
-    resolveSend({ preimage: 'ok' })
+    deferred.resolve({ preimage: 'ok' })
     await new Promise(r => setTimeout(r))
     await wrapper.vm.$nextTick()
 
