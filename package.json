@@ -1,7 +1,7 @@
 {
   "name": "@threenine/nuxt-zap",
   "version": "1.0.0",
-  "description": "My new Nuxt module",
+  "description": "A Nuxt module to easily integrate Zapping via lightning network into your Nuxt app",
   "repository": "https://github.com/threenine/nuxt-zap",
   "license": "MIT",
   "type": "module",
@@ -35,7 +35,8 @@
   },
   "dependencies": {
     "@getalby/sdk": "^6.0.0",
-    "@nuxt/kit": "^4.0.1"
+    "@nuxt/kit": "^4.0.1",
+    "defu": "^6.1.4"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.6.2",
