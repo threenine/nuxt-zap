@@ -1,5 +1,5 @@
 import { defineNuxtPlugin } from '#app'
-import { sendZap } from './utils/zap'
+import { sendZap } from './composables/zap'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const options = nuxtApp.$config.public.nuxtZap || {}

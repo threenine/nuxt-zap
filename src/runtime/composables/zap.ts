@@ -96,6 +96,7 @@ type AlbySdkShape = {
 async function getAlbyProvider(): Promise<WebLNLike | undefined> {
   try {
     // Dynamically import to avoid SSR issues while narrowing to the subset we use
+    // @ts-expect-error - dynamic import
     const albySdk: Partial<AlbySdkShape> = await import('@getalby/sdk')
     if (albySdk?.WebLNProvider?.requestProvider) {
       return await albySdk.WebLNProvider.requestProvider()
@@ -120,6 +121,7 @@ async function ensureEnabled(webln: WebLNLike): Promise<WebLNLike> {
 }
 async function getWindowWebLN(): Promise<WebLNLike | undefined> {
   if (typeof window !== 'undefined' && 'webln' in window) {
+    // @ts-expect-error - window.webln is not typed correctly
     const webln = (window as unknown).webln as WebLNLike
     return ensureEnabled(webln)
   }
@@ -139,7 +141,7 @@ export async function getWebLN(): Promise<WebLNLike> {
     return windowWebLN
   }
 
-  throw new ZapException('No WebLN provider available. Install Alby or enable WebLN.')
+  throw new ZapException('No WebLN provider available.', 'No WebLN provider available. Install Alby or enable WebLN.')
 }
 
 export async function sendZap({ zapAddress, amount, comment }: ZapOptions): Promise<ZapResult> {
@@ -158,6 +160,7 @@ export async function sendZap({ zapAddress, amount, comment }: ZapOptions): Prom
   const invoiceRes = await requestInvoice(lnurlInfo.callback, satsToMsat, comment)
 
   const webln = await getWebLN()
+  // @ts-expect-error - webln is not typed correctly
   const payResult = await webln.sendPayment(invoiceRes.pr)
   // Different providers return different shapes; normalize minimal fields
   return {

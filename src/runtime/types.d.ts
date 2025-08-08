@@ -1,4 +1,4 @@
-import type { ZapResult } from './utils/zap'
+import type { ZapResult } from './composables/zap'
 
 declare module '#app' {
   interface NuxtApp {
