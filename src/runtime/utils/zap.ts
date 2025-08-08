@@ -13,17 +13,19 @@ export interface ZapResult {
   paymentHash?: string
   invoice?: string
 }
-
+export interface ZapException {
+  message: string
+}
 // Resolve a lightning address into LNURLp metadata
 async function resolveLightningAddress(address: string) {
   const [name, host] = address.split('@')
   if (!name || !host) {
-    throw new Error('Invalid lightning address')
+    throw new ZapException('Invalid lightning address')
   }
   const wellKnownUrl = `https://${host}/.well-known/lnurlp/${encodeURIComponent(name)}`
   const res = await fetch(wellKnownUrl)
   if (!res.ok) {
-    throw new Error(`Failed to resolve lightning address: ${res.status}`)
+    throw new ZapException(`Failed to resolve lightning address: ${res.status}`)
   }
   const data = await res.json()
   return data as {
@@ -46,42 +48,68 @@ async function requestInvoice(callbackUrl: string, amountMsat: number, comment?:
   }
   const res = await fetch(url.toString())
   if (!res.ok) {
-    throw new Error(`Failed to request invoice: ${res.status}`)
+    throw new ZapException(`Failed to request invoice: ${res.status}`)
   }
   const data = await res.json()
   if (data.status === 'ERROR') {
-    throw new Error(data.reason || 'LNURL error')
+    throw new ZapException(data.reason || 'LNURL error')
   }
-  return data as { pr: string; routes: any[] }
+  return data as { pr: string, routes: string[] }
+}
+
+type WebLNLike = {
+  enabled?: boolean
+  enable?: () => Promise<void>
+  // Allow other properties/methods without forcing dependency on a specific SDK shape
+  [key: string]: unknown
+}
+
+type AlbySdkShape = {
+  WebLNProvider?: {
+    requestProvider?: () => Promise<WebLNLike>
+  }
+  requestProvider?: () => Promise<WebLNLike>
+  getProvider?: () => Promise<WebLNLike>
+}
+async function getAlbyProvider(): Promise<WebLNLike | undefined> {
+  try {
+    // Dynamically import to avoid SSR issues while narrowing to the subset we use
+    const albySdk: Partial<AlbySdkShape> = await import('@getalby/sdk')
+    if (albySdk?.WebLNProvider?.requestProvider) {
+      return await albySdk.WebLNProvider.requestProvider()
+    }
+    if (albySdk?.requestProvider) {
+      return await albySdk.requestProvider()
+    }
+    if (albySdk?.getProvider) {
+      return await albySdk.getProvider()
+    }
+  }
+  catch {
+    // Ignore import errors; fallback will be attempted
+  }
+  return undefined
+}
+async function ensureEnabled(webln: WebLNLike): Promise<WebLNLike> {
+  if (webln && webln.enable && !webln.enabled) {
+    await webln.enable()
+  }
+  return webln
 }
 
 // Get a WebLN provider (try @getalby/sdk first, then fallback to window.webln)
-async function getWebLN() {
-  try {
-    // Dynamically import to avoid SSR issues; use any to avoid type dependency on exact SDK API shape
-    const sdk: any = await import('@getalby/sdk')
-    // Common names used in SDK for browser webln provider
-    if (sdk?.WebLNProvider?.requestProvider) {
-      return await sdk.WebLNProvider.requestProvider()
-    }
-    if (sdk?.requestProvider) {
-      return await sdk.requestProvider()
-    }
-    if (sdk?.getProvider) {
-      return await sdk.getProvider()
-    }
+export async function getWebLN(): Promise<WebLNLike> {
+  const albyProvider = await getAlbyProvider()
+  if (albyProvider) {
+    return albyProvider
   }
-  catch (e) {
-    // ignore and fallback
-  }
+
   if (typeof window !== 'undefined' && (window as any).webln) {
-    const webln = (window as any).webln
-    if (!webln.enabled && webln.enable) {
-      await webln.enable()
-    }
-    return webln
+    const webln = (window as any).webln as WebLNLike
+    return await ensureEnabled(webln)
   }
-  throw new Error('No WebLN provider available. Install Alby or enable WebLN.')
+
+  throw new ZapException('No WebLN provider available. Install Alby or enable WebLN.')
 }
 
 export async function sendZap({ zapAddress, amount, comment }: ZapOptions): Promise<ZapResult> {
