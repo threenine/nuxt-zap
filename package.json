@@ -53,6 +53,9 @@
     "nuxt": "^4.0.1",
     "typescript": "~5.8.3",
     "vitest": "^3.2.4",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^24.1.0",
+    "@vitejs/plugin-vue": "^5.2.1",
     "vue-tsc": "^3.0.4"
   }
 }
