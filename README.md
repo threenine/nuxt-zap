@@ -102,13 +102,13 @@ A WebLN provider is required (e.g. Alby browser extension). The SDK will be used
 
 
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/nuxt-zap/latest.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-version-src]: https://img.shields.io/npm/v/@threenine/nuxt-zap/latest.svg?style=flat&colorA=020420&colorB=00DC82
 [npm-version-href]: https://npmjs.com/package/@threenine/nuxt-zap
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-zap.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-downloads-src]: https://img.shields.io/npm/dm/@threenine/nuxt-zap.svg?style=flat&colorA=020420&colorB=00DC82
 [npm-downloads-href]: https://npm.chart.dev/@threenine/nuxt-zap
 
-[license-src]: https://img.shields.io/npm/l/nuxt-zap.svg?style=flat&colorA=020420&colorB=00DC82
+[license-src]: https://img.shields.io/npm/l/@threenine/nuxt-zap.svg?style=flat&colorA=020420&colorB=00DC82
 [license-href]: https://npmjs.com/package/@threenine/nuxt-zap
 
 [nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
