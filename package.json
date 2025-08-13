@@ -1,6 +1,6 @@
 {
   "name": "@threenine/nuxt-zap",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Nuxt module to easily integrate Zapping via lightning network into your Nuxt app",
   "repository": "https://github.com/threenine/nuxt-zap",
   "license": "MIT",
