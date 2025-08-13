@@ -45,7 +45,7 @@ export default defineNuxtModule<ModuleOptions>({
       })
 
     addComponent({
-      name: 'Zap',
+      name: 'ZapButton',
       filePath: resolve('./runtime/components/ZapButton.vue'),
     },
     )
