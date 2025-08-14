@@ -56,7 +56,7 @@ export default defineNuxtConfig({
 - Component:
 ```vue
 <template>
-  <Zap title="Zap me" />
+  <ZapButton title="Zap me" />
 </template>
 ```
 
