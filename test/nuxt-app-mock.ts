@@ -15,8 +15,17 @@ export function useNuxtApp(): NuxtApp {
   // Rename: intent-revealing name for the selected implementation
   const zapSend: SendFn = globalWithMock.__sendMock ?? defaultSend
 
+  interface ZapApi {
+    send: typeof zapSend
+  }
+
+  const publicConfig = Object.freeze({
+    public: {} as Record<string, unknown>,
+  })
+  const zapApi = { send: zapSend } satisfies ZapApi
   return {
-    $config: { public: {} },
-    $zap: { send: zapSend },
+    // @ts-expect-error not needed
+    $config: publicConfig,
+    $zap: zapApi,
   }
 }
