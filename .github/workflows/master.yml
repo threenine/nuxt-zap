@@ -68,5 +68,4 @@ jobs:
         - name: Push commits and tags
           run: |
             git push
-            ++
             git push --follow-tags
