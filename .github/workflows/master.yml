@@ -65,3 +65,8 @@ jobs:
           run: pnpm dev:prepare
         - name: do release
           run: pnpm release
+        - name: Push commits and tags
+          run: |
+            git push
+            ++
+            git push --follow-tags

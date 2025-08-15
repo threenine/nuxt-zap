@@ -9,7 +9,7 @@ export function useNuxtApp(): NuxtApp {
   // Introduce: typed default send implementation
   const defaultSend: SendFn = async () => ({} as unknown as ZapResult)
 
-  // Introduce: narrowly-typed access to an optional global mock
+  // Introduce: narrowly typed access to an optional global mock
   const globalWithMock = globalThis as unknown as { __sendMock?: SendFn }
 
   // Rename: intent-revealing name for the selected implementation
