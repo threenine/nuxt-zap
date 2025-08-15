@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useNuxtApp } from '#app'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { ZapException } from '~/src/runtime/composables/zap'
 
 const props = withDefaults(defineProps<{ title?: string }>(), { title: 'Zap' })
 const open = ref(false)
@@ -21,7 +23,7 @@ async function onSend() {
     result.value = `Paid invoice. Preimage: ${res?.preimage || 'n/a'}`
     open.value = false
   }
-  catch (e: ZapException) {
+  catch (e: Error | ZapException | unknown) {
     error.value = e?.message || String(e)
   }
   finally {

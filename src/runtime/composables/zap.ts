@@ -13,7 +13,7 @@ export interface ZapResult {
   paymentHash?: string
   invoice?: string
 }
-class ZapException extends Error {
+export class ZapException extends Error {
   additionalInfo: string
 
   // Step 3: Override the constructor
@@ -130,7 +130,7 @@ async function getWindowWebLN(): Promise<WebLNLike | undefined> {
 
 // Get a WebLN provider (try @getalby/sdk first, then fallback to window.webln)
 
-export async function getWebLN(): Promise<WebLNLike> {
+export async function getWebLN(): Promise<WebLNLike | undefined> {
   const albyProvider = await getAlbyProvider()
   if (albyProvider) {
     return albyProvider
@@ -141,7 +141,8 @@ export async function getWebLN(): Promise<WebLNLike> {
     return windowWebLN
   }
 
-  throw new ZapException('No WebLN provider available.', 'No WebLN provider available. Install Alby or enable WebLN.')
+  // Return undefined to allow callers to fallback to non-WebLN flows (e.g., lightning: deep link)
+  return undefined
 }
 
 export async function sendZap({ zapAddress, amount, comment }: ZapOptions): Promise<ZapResult> {
@@ -160,12 +161,29 @@ export async function sendZap({ zapAddress, amount, comment }: ZapOptions): Prom
   const invoiceRes = await requestInvoice(lnurlInfo.callback, satsToMsat, comment)
 
   const webln = await getWebLN()
-  // @ts-expect-error - webln is not typed correctly
-  const payResult = await webln.sendPayment(invoiceRes.pr)
-  // Different providers return different shapes; normalize minimal fields
-  return {
-    preimage: payResult?.preimage,
-    paymentHash: payResult?.paymentHash || payResult?.payment_hash,
-    invoice: invoiceRes.pr,
+  if (webln) {
+    // @ts-expect-error - webln is not typed correctly
+    const payResult = await webln.sendPayment(invoiceRes.pr)
+    // Different providers return different shapes; normalize minimal fields
+    return {
+      preimage: payResult?.preimage,
+      paymentHash: payResult?.paymentHash || payResult?.payment_hash,
+      invoice: invoiceRes.pr,
+    }
   }
+
+  // Fallback for mobile browsers without WebLN: attempt to open a lightning: deep link
+  if (typeof window !== 'undefined') {
+    const uri = invoiceRes.pr.startsWith('lightning:') ? invoiceRes.pr : `lightning:${invoiceRes.pr}`
+    try {
+      // Using location.href tends to work best across mobile browsers
+      window.location.href = uri
+    }
+    catch {
+      // Ignore navigation errors; caller can still use the returned invoice (e.g., show QR)
+    }
+  }
+
+  // Return the invoice so the UI can render a QR code or show a copy/open link
+  return { invoice: invoiceRes.pr }
 }
