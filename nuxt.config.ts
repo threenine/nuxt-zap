@@ -6,5 +6,6 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     '@nuxt/ui',
   ],
+  compatibilityDate: '2025-08-15',
 
 })
