@@ -24,6 +24,7 @@ Nuxt module for Zap payments using @getalby/sdk.
 
 - Send a zap (Lightning payment) to a Lightning Address using @getalby/sdk (WebLN)\
   Falls back to window.webln if the SDK provider is not available.
+- Automatic mobile fallback: if no WebLN provider is available (mobile browsers without extensions), an invoice is requested and a lightning: deep link is opened to hand off to a mobile wallet. The invoice is also returned so you can show a QR or copy button in your UI.
 - Simple Zap component with amount and comment input.
 
 ## Quick Setup
@@ -56,7 +57,7 @@ export default defineNuxtConfig({
 - Component:
 ```vue
 <template>
-  <Zap title="Zap me" />
+  <ZapButton title="Zap me" />
 </template>
 ```
 
@@ -66,7 +67,7 @@ const { $zap } = useNuxtApp()
 await $zap.send(100, 'Thanks!')
 ```
 
-A WebLN provider is required (e.g. Alby browser extension). The SDK will be used when available.
+If a WebLN provider is available (e.g. Alby browser extension), it will be used to pay directly. On mobile without extensions, the module will open a `lightning:` deep link to your default wallet and also return the BOLT11 invoice so you can display a QR or link.
 
 
 ## Contribution

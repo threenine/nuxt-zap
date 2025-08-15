@@ -1,0 +1,70 @@
+name: develop.yml
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: npx nypm@latest i
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Prepare Nuxt
+        run: pnpm dev:prepare
+
+      - name: Run linting
+        run: pnpm lint
+
+      - name: Build dist
+        run: pnpm prepack
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+      # Download previously built artifact
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org/'
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Install dependencies
+        run: npx nypm@latest i
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Prepare Nuxt
+        run: pnpm dev:prepare
+      - name: Build dist
+        run: pnpm prepack
+
+      - name: Run tests
+        run: pnpm test
+

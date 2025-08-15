@@ -1,7 +1,31 @@
-export function useNuxtApp() {
-  const send = (globalThis as unknown).__sendMock || (async () => ({}))
+// Type-safe mock for useNuxtApp in tests
+import type { NuxtApp } from '#app'
+import type { ZapResult } from '~/src/runtime/composables/zap'
+
+export function useNuxtApp(): NuxtApp {
+  // Extract: explicit type alias for the zap send function
+  type SendFn = (amount?: number, comment?: string) => Promise<ZapResult>
+
+  // Introduce: typed default send implementation
+  const defaultSend: SendFn = async () => ({} as unknown as ZapResult)
+
+  // Introduce: narrowly typed access to an optional global mock
+  const globalWithMock = globalThis as unknown as { __sendMock?: SendFn }
+
+  // Rename: intent-revealing name for the selected implementation
+  const zapSend: SendFn = globalWithMock.__sendMock ?? defaultSend
+
+  interface ZapApi {
+    send: typeof zapSend
+  }
+
+  const publicConfig = Object.freeze({
+    public: {} as Record<string, unknown>,
+  })
+  const zapApi = { send: zapSend } satisfies ZapApi
   return {
-    $config: { public: {} },
-    $zap: { send },
+    // @ts-expect-error not needed
+    $config: publicConfig,
+    $zap: zapApi,
   }
 }
