@@ -24,10 +24,10 @@
   ],
   "scripts": {
     "prepack": "nuxt-module-build build",
-    "dev": "npm run dev:prepare && nuxi dev playground",
+    "dev": "pnpm run dev:prepare && nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "release": "pnpm run lint && pnpm run test && pnpm run prepack && changelogen --release && pnpm publish && git push --follow-tags",
     "lint": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest watch",
