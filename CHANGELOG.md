@@ -1,6 +1,26 @@
 # Changelog
 
 
+## v1.3.0
+
+[compare changes](https://github.com/threenine/nuxt-zap/compare/v1.2.0...v1.3.0)
+
+### 🚀 Enhancements
+
+- **ZapButton:** - enhance props API with new attributes;   To enable further customization of the zap button - update dependencies in lockfile ([4baed03](https://github.com/threenine/nuxt-zap/commit/4baed03))
+
+### 🏡 Chore
+
+- **release:** V1.1.0 ([cd36157](https://github.com/threenine/nuxt-zap/commit/cd36157))
+- **release:** V1.2.0 ([6a91e39](https://github.com/threenine/nuxt-zap/commit/6a91e39))
+- Remove redundant release step from master workflow, switch npm commands to pnpm in scripts ([5b8a315](https://github.com/threenine/nuxt-zap/commit/5b8a315))
+- Add `compatibilityDate` to Nuxt config ([41eeac4](https://github.com/threenine/nuxt-zap/commit/41eeac4))
+- Consolidate and rename GitHub workflows for CI and publishing, remove unused workflow files ([1a18bec](https://github.com/threenine/nuxt-zap/commit/1a18bec))
+
+### ❤️ Contributors
+
+- Gary Woodfine <lnb0l9dc@duck.com>
+
 ## v1.2.0
 
 [compare changes](https://github.com/threenine/nuxt-zap/compare/v1.0.2...v1.2.0)
