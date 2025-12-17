@@ -1,7 +1,7 @@
 <template>
   <UApp>
     <p>Nuxt module playground!</p>
-    <ZapButton />
+    <ZapButton variant="outline" size="xs" color="neutral"   />
   </UApp>
 </template>
 

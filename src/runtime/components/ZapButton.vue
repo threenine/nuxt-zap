@@ -4,7 +4,21 @@ import { useNuxtApp } from '#app'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { ZapException } from '~/src/runtime/composables/zap'
 
-const props = withDefaults(defineProps<{ title?: string }>(), { title: 'Zap' })
+const props = withDefaults(defineProps<{
+  title?: string,
+  variant?: string,
+  size?: string,
+  icon? : string,
+  color: string
+
+}>(), {
+  title: '',
+  variant: 'default',
+  size: 'md',
+  icon: 'clarity:lightning-solid',
+  color: 'primary'
+})
+
 const open = ref(false)
 const amount = ref<number | null>(null)
 const comment = ref('')
@@ -35,12 +49,14 @@ async function onSend() {
 <template>
   <UPopover v-model:open="open">
     <UButton
-      color="primary"
+      :color="color"
       :loading="sending"
       :disabled="sending"
+      :variant="variant"
+      :size="size"
+      :icon="icon"
     >
-      <Icon name="clarity:lightning-solid" />
-      {{ props.title }}
+      <span v-if="props.title" class="mr-2">{{ props.title }}</span>
     </UButton>
     <template #content>
       <div class="m-2 p-3 bg-gray-50 rounded shadow min-w-64">
