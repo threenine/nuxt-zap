@@ -1,20 +1,24 @@
-name: ci
-
+name: Build and Test
 on:
   push:
-    tags:
-      - "*"
-
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v5.0.0
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org/'
 
       - name: Setup PNPM
@@ -23,10 +27,9 @@ jobs:
           version: 10
 
       - name: Install dependencies
-        run: npx nypm@latest i
-
-      - name: Install dependencies
         run: pnpm install
+
+
 
       - name: Prepare Nuxt
         run: pnpm dev:prepare
@@ -40,8 +43,3 @@ jobs:
 
       - name: Build package
         run: pnpm prepack
-
-      - name: Publish to NPM
-        run: pnpm publish --no-git-checks --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
