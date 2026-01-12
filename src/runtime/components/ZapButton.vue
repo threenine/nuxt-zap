@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<{
   color: 'primary'
 })
 
-const open = ref(false)
+const open = useState('open', () => false)
 const amount = ref<number | null>(null)
 const comment = ref('')
 const sending = ref(false)
@@ -55,6 +55,7 @@ async function onSend() {
       :variant="variant"
       :size="size"
       :icon="icon"
+
     >
       <span v-if="props.title" class="mr-2">{{ props.title }}</span>
     </UButton>

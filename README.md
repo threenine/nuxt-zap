@@ -9,6 +9,7 @@ Find and replace all on all files (CMD+SHIFT+F):
 
 # Nuxt- Zap
 
+[![Nuxt-Zap](https://res.cloudinary.com/threenine-co-uk/image/upload/v1733252921/nuxt-zap_uqk66i.png)]
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![License][license-src]][license-href]
