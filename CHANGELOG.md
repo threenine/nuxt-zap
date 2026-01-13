@@ -1,6 +1,20 @@
 # Changelog
 
 
+## v1.4.2
+
+[compare changes](https://github.com/threenine/nuxt-zap/compare/v1.4.0...v1.4.2)
+
+### 🏡 Chore
+
+- Replace `useState` with `ref` for `open` in `ZapButton`; update dependencies in lockfile and improve code formatting in guidelines file ([79dcf71](https://github.com/threenine/nuxt-zap/commit/79dcf71))
+- Update and consolidate GitHub workflows; introduce `develop.yml`, rename and revise `release.yml` and `master.yml`, and bump `@nuxt/ui` to `^4.3.0` ([c5a8fb5](https://github.com/threenine/nuxt-zap/commit/c5a8fb5))
+- **release:** V1.4.1 ([1d8824f](https://github.com/threenine/nuxt-zap/commit/1d8824f))
+
+### ❤️ Contributors
+
+- Gary Woodfine <lnb0l9dc@duck.com>
+
 ## v1.4.1
 
 [compare changes](https://github.com/threenine/nuxt-zap/compare/v1.4.0...v1.4.1)
