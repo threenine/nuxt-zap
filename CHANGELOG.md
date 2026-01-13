@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v1.4.0
+
+[compare changes](https://github.com/threenine/nuxt-zap/compare/v1.3.0...v1.4.0)
+
+### 🚀 Enhancements
+
+- **ZapButton:** Replace `ref` with `useState` for `open`, add image to README ([b58cc08](https://github.com/threenine/nuxt-zap/commit/b58cc08))
+- **ZapButton:** Enhance props typing and improve template formatting; update default `zapAddress` in Nuxt config; improve tests with `useState` mock ([cfa3ac1](https://github.com/threenine/nuxt-zap/commit/cfa3ac1))
+
+### 🩹 Fixes
+
+- **README:** Remove redundant brackets around Nuxt-Zap image link ([aa3dd58](https://github.com/threenine/nuxt-zap/commit/aa3dd58))
+
+### 🏡 Chore
+
+- Add pull request template to GitHub configuration ([446fba1](https://github.com/threenine/nuxt-zap/commit/446fba1))
+- Update pull request template with improved structure and detailed guidelines ([10e5b1d](https://github.com/threenine/nuxt-zap/commit/10e5b1d))
+
+### ❤️ Contributors
+
+- Gary Woodfine <lnb0l9dc@duck.com>
+
 ## v1.3.0
 
 [compare changes](https://github.com/threenine/nuxt-zap/compare/v1.2.0...v1.3.0)
