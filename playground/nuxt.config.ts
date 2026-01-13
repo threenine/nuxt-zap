@@ -3,6 +3,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   nuxtZap: {
-    zapAddress: 'garywoodfine@getalby.com',
+    zapAddress: 'user40038469@fountain.fm',
   },
 })
