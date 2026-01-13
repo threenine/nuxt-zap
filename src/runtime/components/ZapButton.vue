@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<{
   color: 'primary',
 })
 
-const open = useState('open', () => false)
+const open = ref(false)
 const amount = ref<number | null>(null)
 const comment = ref('')
 const sending = ref(false)

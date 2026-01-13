@@ -13,8 +13,11 @@
 - getAlby/sdk
 - WebLN
 
-  344  pnpm nuxt build
-  345  pnpm build
-  346  pnpm install
-  347  netlify dev
-  348  pnpm release
+```sh
+   pnpm nuxt build
+   pnpm build
+   pnpm install
+   netlify dev
+   pnpm release
+```
+
