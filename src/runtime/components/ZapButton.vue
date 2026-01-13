@@ -5,18 +5,18 @@ import { useNuxtApp } from '#app'
 import type { ZapException } from '~/src/runtime/composables/zap'
 
 const props = withDefaults(defineProps<{
-  title?: string,
-  variant?: string,
-  size?: string,
-  icon? : string,
-  color: string
+  title?: string
+  variant?: string
+  size?: string
+  icon?: string
+  color?: string
 
 }>(), {
   title: '',
   variant: 'default',
   size: 'md',
   icon: 'clarity:lightning-solid',
-  color: 'primary'
+  color: 'primary',
 })
 
 const open = useState('open', () => false)
@@ -55,9 +55,11 @@ async function onSend() {
       :variant="variant"
       :size="size"
       :icon="icon"
-
     >
-      <span v-if="props.title" class="mr-2">{{ props.title }}</span>
+      <span
+        v-if="props.title"
+        class="mr-2"
+      >{{ props.title }}</span>
     </UButton>
     <template #content>
       <div class="m-2 p-3 bg-gray-50 rounded shadow min-w-64">

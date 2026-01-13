@@ -5,16 +5,29 @@ import { mount } from '@vue/test-utils'
 // SFC under test
 import ZapButton from '../src/runtime/components/ZapButton.vue'
 
-// Helper to mock Nuxt's useNuxtApp to inject $zap
 const sendMock = vi.fn()
+
 vi.mock('#app', () => {
+  const useState = (key: string, init?: () => unknown) => {
+    const val = init ? init() : undefined
+    return { value: val }
+  }
+
   return {
+    useState,
     useNuxtApp: () => ({
       $config: { public: {} },
       $zap: { send: sendMock },
     }),
   }
 })
+
+// Also provide useState globally for the component's setup execution
+// @ts-expect-error - simulating Nuxt auto-import
+globalThis.useState = (key: string, init?: () => unknown) => {
+  const val = init ? init() : undefined
+  return { value: val }
+}
 
 function mountZap(overrides: Partial<Parameters<typeof mount>[1]> = {}) {
   return mount(ZapButton, {
